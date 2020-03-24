@@ -2,25 +2,35 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Results from '../components/Results';
 import MoneyInput from '../components/MoneyInput';
-import state from '../store'
+import { useSelector } from 'react-redux'
+import NavbarHome from '../components/NavbarHome';
 
-function Home() {
-    const [results, setResults] = React.useState([{ 'id': 'debit', 'label': 'Debito', 'tax': state.taxDebit, 'value': 0 }, { 'id': 'credit', 'label': 'Crédito', 'tax': state.taxCredit, 'value': 0 }]);
+function Home({ navigation }) {
+    const taxes = useSelector(state => state.taxes);
+    const [results, setResults] = React.useState([{ 'id': 'credit', 'label': 'Crédito', 'value': 0 }, { 'id': 'debit', 'label': 'Debito', 'value': 0 }]);
     const [value, setValue] = React.useState(0);
 
     function calculate(value) {
         setValue(value);
-
         setResults(
             results.map(result => {
-                return { ...result, value: ((parseFloat(value, 10) / (1 - result.tax)) / 100).toFixed(2) }
+                const tax = taxes[result.id]
+                const newValue = ((parseInt(value, 10) / (1 - tax)) / 100);
+                return { ...result, value: newValue.toFixed(2) }
             })
         );
     }
 
+    function navGoto() { navigation.navigate('Settings') }
+
+    function cleanData() { calculate(0); }
+
+    React.useEffect(() => navigation.addListener('focus', cleanData));
+
     return (
         <View style={styles.container}>
-            <MoneyInput value={value} onChange={calculate} />
+            <NavbarHome goto={navGoto} />
+            <MoneyInput value={value} onChange={calculate} autoFocus/>
             <Results data={results} />
         </View>
     );
@@ -30,7 +40,7 @@ const styles = StyleSheet.create(
     {
         container:
         {
-            paddingVertical: 120
+            paddingVertical: 12
         }
     }
 )

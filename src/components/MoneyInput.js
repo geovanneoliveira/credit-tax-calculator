@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { TextInputMask } from 'react-native-masked-text';
 
-function MoneyInput({ value, onChange }) {
+function MoneyInput({ value, onChange, ...props }) {
 
 
     function handleChange(newValue) {
@@ -25,6 +25,7 @@ function MoneyInput({ value, onChange }) {
                 }}
                 value={value}
                 onChangeText={handleChange}
+                {...props}
             />
         </View>
     );

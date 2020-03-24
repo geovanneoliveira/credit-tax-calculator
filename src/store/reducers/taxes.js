@@ -1,4 +1,4 @@
-const initialState = { 'taxDebit': 0.0239, 'taxCredit': 0.05 };
+const initialState = { 'debit': 0.0239, 'credit': 0.05 };
 
 function reducer(state = initialState, action) {
 
